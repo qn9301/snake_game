@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <title>Index</title>
+        <style type="text/css">
+            tr{width:10px;height:10px;}
+            td{width:10px;height:10px;}
+            table{border:1px solid black}
+        </style>
+    </head>
+    <body onkeydown='fangxiang(event)'>
+        <table>
+        <script>
+            for(i=0;i<20;i++){
+                document.write('<tr>');
+                    for(j=0;j<20;j++){
+                        document.write('<td id="t' + i + '_' + j + '"></td>');
+                    }
+                document.write('</tr>');
+            }
+        </script>
+        </table>
+    </body>
+    <script>
+        start = 0;
+        fenshu = 0;
+        snake = new Array();
+        //snake = document.getElementById('t1_1');
+        //snake.style.background = 'yellow';
+        y = 1;
+        x = 3;
+        key = 39;
+        length = 4;
+        for(var i=0;i<length;i++){
+            id = 't'+ 1 +'_' + i;
+            snake[i] = id;
+            document.getElementById(snake[i]).style.background = 'yellow';
+        }
+        console.dir(snake);
+
+        //出现食物
+        fx = Math.floor(2+Math.random()*17);
+        fy = Math.floor(1+Math.random()*18);
+        foodid = 't'+ fx +'_' + fy;
+        document.getElementById(foodid).style.background = 'red';
+        //贪吃蛇运动
+    function tanchishe(){
+        timmer = setInterval(function (){
+            if(key == 37){
+                x--;
+            }else if(key == 38){
+                y--;
+            }else if(key == 39){
+                x++;
+            }else if(key == 40){
+                y++;
+            }
+            id = 't'+ y + '_' + x;
+            //判断是否撞到墙壁
+            if(y<0 || y>19 || x<0 || x>19){
+                clearInterval(timmer);
+                alert('你死了，你的分数是'+ fenshu + '分');
+                window.location.reload();
+                return false;
+            }
+            //判断是否吃自己
+            for(box in snake){
+                //alert(box)
+                if(id == snake[box]){
+                    alert('你死了，你的分数是'+ fenshu + '分');
+                    clearInterval(timmer);
+                    window.location.reload();
+                }
+            }
+            //判断是否吃到食物
+            if(id != foodid){    
+                td = snake.shift();
+                document.getElementById(td).style.background = 'white';
+                //产生新的食物
+            }else{
+                //吃到食物
+                fenshu++;
+                
+                    do{
+                        fx = Math.floor(1+Math.random()*18);
+                        fy = Math.floor(1+Math.random()*18);
+                        foodid = 't'+ fx +'_' + fy;
+                        //alert(foodid+':'+snake[box]);
+                    }while(check())
+                    
+                
+                document.getElementById(foodid).style.background = 'red';
+            }
+            snake.push(id);
+            //alert(document.getElementById(id));
+            //console.dir(snake);
+            document.getElementById(id).style.background = 'yellow';
+            
+        },50)
+        //改变方向
+    }
+        function fangxiang(event){
+            if(start == 0){
+                start = 1;
+                tanchishe();
+            }
+            if(event.keyCode == 37 && key != 39){
+                key  = 37;//左
+            }
+            if(event.keyCode == 38 && key != 40){
+                key  = 38;//上
+            }
+            if(event.keyCode == 39 && key != 37){
+                key  = 39;//右
+            }
+            if(event.keyCode == 40 && key != 38){
+                key  = 40;//下
+            }
+        }
+        function check(){
+            for(box in snake){
+                if(foodid == snake[box]){
+                    return true;
+                }
+            }
+            return false;
+        }
+        </script>
+</html>
+
